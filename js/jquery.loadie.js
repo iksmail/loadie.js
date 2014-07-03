@@ -23,10 +23,11 @@
    * Loadie.update(0.2)
    * Loadie.update(1) // Finishes loadie, too
    */
-  Loadie.update = function(dom, percent) {
+  Loadie.update = function(dom, percent, animate) {
+      animate = (typeof animate === "undefined") ? 0 : animate;
     var loadie = $('#loadie-' + dom.data('loadie-id'), dom);
     var parentWidth = dom.width();
-    loadie.css('width', Math.floor(percent * parentWidth) + "px");
+    loadie.stop().animate({'width': Math.floor(percent * parentWidth)}, animate);
   }
 
   /*
@@ -40,14 +41,15 @@
     this.update(dom, percent);
   }
 
-  $.fn.loadie = function(percent, callback) {
+  $.fn.loadie = function(percent, animate) {
     var percent = percent || 0;
     var parent = $(this);
+      animate = (typeof animate === "undefined") ? 0 : animate;
 
     if(parent.data('loadie-loaded') !== 1) {
       Loadie.init(parent, percent);
     } else {
-      Loadie.update(parent, percent);
+      Loadie.update(parent, percent, animate);
     }
     if(percent >= 1) {
       setTimeout(function() {
